@@ -1,3 +1,5 @@
+package org.isep.ft;
+
 import org.isep.ft.FTBillboard;
 import org.isep.ft.Billboard;
 import java.rmi.RemoteException;
@@ -6,7 +8,7 @@ import java.rmi.registry.Registry;
 import java.util.List;
 
 public class FaultTolerantClient {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         if (args.length != 1) {
             System.out.println("USAGE: FaultTolerantClient serverAddress:port");
             System.exit(0);
@@ -21,18 +23,17 @@ public class FaultTolerantClient {
         }
 
         try {
-            while (true) {
-                // Get the list of available replicas (neighbors) from the leader
+            while (true) { 
                 List<String> neighbors = billboardService.getNeighbors();
                 String leaderAddress = billboardService.getLeader();
 
-                // Perform an operation on the leader
+
                 String message = "Hello from client";
                 System.out.println("Sending a message to the leader: " + message);
                 billboardService.setMessage(message);
 
-                // Try to connect to the leader and retry if it fails
-                int retries = 2;  // Number of retries before trying a neighbor
+
+                int retries = 2;   
                 boolean success = false;
 
                 while (retries > 0) {
